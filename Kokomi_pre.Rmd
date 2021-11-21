@@ -1,0 +1,39 @@
+---
+title: "Sangonomiya Kokomi"
+subtitle: "C0, Postać i bronie lvl 90, Talenty 3x10"
+author: "Nephu"
+output:
+  slidy_presentation:
+    fig_height: 7
+    fig_width: 11
+    highlight: zenburn
+---
+
+```{r, include = FALSE}
+source("Sangonomiya_Kokomi.R")
+library(ggplot2)
+```
+
+### Brak efektów z artefaktów
+```{r, echo = FALSE}
+ggplot( data = filter(dane_razemv2_1, Set_type == 0) ) + 
+  geom_point( aes( Artifact_type, DMG, color = Rodzaj_ataku, shape = Rodzaj_ataku), size = 2 ) +
+  ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+ # labs(title = "Kokomi C0 Lvl 90, Talenty 3x10, bez efektów z artefaktów") +
+  theme(  legend.position = c( 0.65, 0.15) )+
+  guides( color = guide_legend( nrow = 2 ) ) +
+  scale_color_brewer( palette = "Dark2") +
+  coord_flip() + facet_wrap(~WName)
+```
+
+### 4xHeart_of_Depth
+```{r, echo = FALSE}
+ggplot( data = filter(dane_razemv2_1, Set_type == 1) ) + 
+  geom_point( aes( Artifact_type, DMG, color = Rodzaj_ataku, shape = Rodzaj_ataku), size = 2 ) +
+  ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+#  labs(title = "Kokomi C0 Lvl 90, Talenty 3x10, 4xHeart_of_Depth") +
+  theme(  legend.position = c( 0.65, 0.15) )+
+  guides( color = guide_legend( nrow = 2 ) ) +
+  scale_color_brewer( palette = "Dark2") +
+  coord_flip() + facet_wrap(~WName)
+```
