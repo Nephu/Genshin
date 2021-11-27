@@ -162,13 +162,29 @@ Artifact <- Artifact_X %>%
 
 Sett <- Sett %>% mutate( uchwyt = c("A_r") )
 
-Staty_Kokommi <- left_join( Sett, Artifact, "uchwyt") %>%
+Set_name <- tribble(~ASet, ~Name_Set,
+                    0, "Bez_setu",
+                    1, "4xHeart_of_Depth")
+
+ArtSet <- tribble(~Atk_AS, ~HP_AS, ~HDRAS, ~HealAS,
+                  ~N_AS, ~CH_AS, ~E_AS, ~Q_AS, ~ASetAS, ~uchwyt,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, "A_r",
+                  0, 0, 15, 0, 30, 30, 0, 0, 1, "A_r")
+
+Sett2 <- left_join( Sett, ArtSet, "uchwyt") %>%
+  mutate( Atk_proc = Atk_proc + Atk_AS, HP_proc = HP_proc + HP_AS,
+          HDR = HDR + HDRAS, Heal = Heal + HealAS,
+          N_bonus = N_bonus + N_AS, CH_bonus = CH_bonus + CH_AS, 
+          E_bonus = E_bonus + E_AS, Q_bonus = Q_bonus + Q_AS, ASet = ASet + ASetAS) %>%
+  select(1:15,)
+
+Staty_Kokommi <- left_join( Sett2, Artifact, "uchwyt") %>%
     mutate( Atk_proc = Atk_proc + Art_Atk_proc, Atk_flat = Atk_flat + Art_Atk_flat) %>%
     mutate( HP_proc = HP_proc + Art_HP_proc, HP_flat = HP_flat + Art_HP_flat) %>% 
     mutate( HDR = HDR + El_dmg_G) %>%
     mutate( ATK = Atk_base * ( 1 + Atk_proc/100) + Atk_flat, 
             HPMax = HP_base * ( 1 + HP_proc/100) + HP_flat ) %>%
-    select( ATK, HPMax, HDR, Wpn, uchwyt, Heal_G, Art_type, Sub_art, Heal) %>%
+    select( ATK, HPMax, HDR, Wpn, uchwyt, Heal_G, Art_type, Sub_art, Heal, ASet) %>%
     mutate( Heal_dmg = ( Heal_G + Heal)*0.15 ) %>%
     mutate( N_HP_proc = 8.71 + Heal_dmg,
             CH_HP_proc = 12.2 + Heal_dmg,
@@ -210,71 +226,53 @@ FT10N <- function( zesto){
 
 WBN10 <- FT10N(Staty_Kokommi)
 
-FdmgoutB <- WBT10 %>% select( ATK, HPMax, Wpn, Art_type, Sub_art, N1, N2, N3, CH, ED, Reg_per_hit) %>%
+FdmgoutB <- WBT10 %>% select( ATK, HPMax, Wpn, Art_type, Sub_art, N1, N2, N3, CH, ED, Reg_per_hit, ASet) %>%
   mutate( AVG_Normal = ( N1 + N2 + N3)/3)
 
-FdmgoutN <- WBN10 %>% select( ATK, HPMax, Wpn, Art_type, Sub_art, N1, N2, N3, CH, ED) %>%
+FdmgoutN <- WBN10 %>% select( ATK, HPMax, Wpn, Art_type, Sub_art, N1, N2, N3, CH, ED, ASet) %>%
   mutate( AVG_Normal = ( N1 + N2 + N3)/3)
 
 #FoutB <- FdmgoutB %>% gather("Zdolnosc", "Obrazenia", 6:10 )
 
-avgdmgB <- FdmgoutB %>% group_by( Wpn, Art_type) %>% summarise( AVG_N = mean(AVG_Normal),
+avgdmgB <- FdmgoutB %>% group_by( Wpn, Art_type, ASet) %>% summarise( AVG_N = mean(AVG_Normal),
                                                                    AVG_Heal = mean(Reg_per_hit),
                                                                    AVG_HP = mean(HPMax),
                                                                    AVG_CH = mean(CH),
                                                                    AVG_ED = mean(ED)) %>%
-  arrange( desc(AVG_N) )
+  arrange( desc(AVG_N) ) %>% ungroup()
 
-ggplot( data = arrange(avgdmgB) ) + 
-  geom_col(aes( Art_type, AVG_N), fill = "blue") + 
-  geom_col(aes( Art_type, AVG_Heal), fill = "green") +
-  coord_flip() + facet_wrap(~Wpn)
-
-avgdmgN <- FdmgoutN %>% group_by( Wpn, Art_type) %>% summarise( AVG_N = mean(AVG_Normal),
+avgdmgN <- FdmgoutN %>% group_by( Wpn, Art_type, ASet) %>% summarise( AVG_N = mean(AVG_Normal),
                                                                    AVG_HP = mean(HPMax),
                                                                    AVG_CH = mean(CH),
                                                                    AVG_ED = mean(ED)) %>%
-  arrange( desc(AVG_N) )
+  arrange( desc(AVG_N) ) %>% ungroup()
 
-ggplot( data = arrange(avgdmgN) ) + 
-  geom_col(aes( Art_type, AVG_N, fill = AVG_N) ) + 
-  coord_flip() + facet_wrap(~Wpn)
-
-dane_burst <- avgdmgB %>% select(1:4, 6:7) %>% mutate( uchwyt = paste(Wpn, Art_type ))
-dane_normal <- avgdmgN %>% select(1:3, 5:6) %>% mutate( uchwyt = paste(Wpn, Art_type ))
+dane_burst <- avgdmgB %>% select(1:5, 7:8) %>% mutate( uchwyt = paste(Wpn, Art_type ))
+dane_normal <- avgdmgN %>% select(1:4, 6:7) %>% mutate( uchwyt = paste(Wpn, Art_type ))
 
 dane_razem <- left_join( dane_burst, dane_normal, "uchwyt") %>%
   mutate( AVGN = ( AVG_N.x + AVG_N.y)/2 ) %>%
   mutate( AVGC = ( AVG_CH.x + AVG_CH.y)/2 ) %>%
   mutate( AVED = ( AVG_ED.x + AVG_ED.y)/2 ) %>%
-  select(1:6, 10:15)
-colnames(dane_razem) <- c("Weapon", "Artifact_type", "Normal_Burst",
+  select(1:7, 12:17)
+colnames(dane_razem) <- c("Weapon", "Artifact_type", "Set_type","Normal_Burst",
                           "AVG_Heal", "Charged_Burst", "Elemental_Burst",
                           "Normal", "Charged", "Elemental", 
                           "On/Off_Burst_Normal", "On/Off_Burst_Charged", "On/Off_Burst_Elemental" )
 
-dane_razemv2 <- dane_razem %>% gather("Rodzaj_ataku", "DMG", 3:12) %>%
+dane_razemv2 <- dane_razem %>% gather("Rodzaj_ataku", "DMG", 4:13) %>%
   filter(!(Rodzaj_ataku == "AVG_Heal")) %>%
   filter( !Rodzaj_ataku %in% c("Elemental","Elemental_Burst", "On/Off_Burst_Elemental")  )
 
-dane_razemv3 <- dane_razem %>% gather("Rodzaj_ataku", "DMG", 3:12) %>%
+dane_razemv2_1 <- left_join(dane_razemv2, Weapon_name, by = c("Weapon" = "Wpn") )
+
+dane_razemv3 <- dane_razem %>% gather("Rodzaj_ataku", "DMG", 4:13) %>%
   filter( Rodzaj_ataku %in% c("Elemental","Elemental_Burst", "On/Off_Burst_Elemental")  )
 
-ggplot( data = dane_razemv2) + 
+ggplot( data = filter(dane_razemv2, Set_type == 1) ) + 
   geom_point( aes( Artifact_type, DMG, color = Rodzaj_ataku, shape = Rodzaj_ataku), size = 2 ) +
-  ylab("Przeci?tne obra?enia") + xlab("Kombinacje artefakt?w: Sands, Goblet, Circlet") +
-  labs(title = "Kokomi C0 Lvl 90, Talenty 3x10, bez efekt?w z artefakt?w") +
+  ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   theme(  legend.position = c( 0.65, 0.15) )+
   guides( color = guide_legend( nrow = 2 ) ) +
   scale_color_brewer( palette = "Dark2") +
   coord_flip() + facet_wrap(~Weapon)
-
-ggplot( data = dane_razemv2) + 
-  geom_col( aes( Weapon, DMG, fill = Rodzaj_ataku), position = "identity", alpha = 0.7) +
-  #geom_point( aes( Weapon, DMG, color = Rodzaj_ataku, shape = Rodzaj_ataku), size = 2 ) +
-  #ylab("Przeci?tne obra?enia") + xlab("Kombinacje artefakt?w: Sands, Goblet, Circlet") +
-  #labs(title = "Kokomi C0 Lvl 90, Talenty 3x10, bez efekt?w z artefakt?w") +
-  #theme(  legend.position = c( 0.65, 0.15) )+
-  #guides( color = guide_legend( nrow = 2 ) ) +
-  #scale_color_brewer( palette = "Dark2") +
-  coord_flip() + facet_wrap(~Artifact_type)
