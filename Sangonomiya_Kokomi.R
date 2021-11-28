@@ -169,7 +169,8 @@ Set_name <- tribble(~ASet, ~Name_Set,
 ArtSet <- tribble(~Atk_AS, ~HP_AS, ~HDRAS, ~HealAS,
                   ~N_AS, ~CH_AS, ~E_AS, ~Q_AS, ~ASetAS, ~uchwyt,
                   0, 0, 0, 0, 0, 0, 0, 0, 0, "A_r",
-                  0, 0, 15, 0, 30, 30, 0, 0, 1, "A_r")
+                  0, 0, 15, 0, 30, 30, 0, 0, 1, "A_r",
+                  0, 0, 0, 15, 0, 0, 0, 0, 2, "A_r")
 
 Sett2 <- left_join( Sett, ArtSet, "uchwyt") %>%
   mutate( Atk_proc = Atk_proc + Atk_AS, HP_proc = HP_proc + HP_AS,
@@ -178,7 +179,7 @@ Sett2 <- left_join( Sett, ArtSet, "uchwyt") %>%
           E_bonus = E_bonus + E_AS, Q_bonus = Q_bonus + Q_AS, ASet = ASet + ASetAS) %>%
   select(1:15,)
 
-Staty_Kokommi <- left_join( Sett2, Artifact, "uchwyt") %>%
+Staty_Kokomi <- left_join( Sett2, Artifact, "uchwyt") %>%
     mutate( Atk_proc = Atk_proc + Art_Atk_proc, Atk_flat = Atk_flat + Art_Atk_flat) %>%
     mutate( HP_proc = HP_proc + Art_HP_proc, HP_flat = HP_flat + Art_HP_flat) %>% 
     mutate( HDR = HDR + El_dmg_G) %>%
@@ -201,35 +202,36 @@ FT10B <- function( zesto){
                    N3 = Out_dmg*1.6975 + N_HP_bonus,
                    CH = Out_dmg*2.6698 + CH_HP_bonus,
                    ED = Out_dmg*1.9654 + ED_HP_bonus,
-                   Reg_per_hit = (HPMax * 0.145 + 169)*( 1 + (Heal_G + Heal)/100 ) ) %>%
+                   Reg_per_hit = (HPMax * 0.0145 + 169)*( 1 + (Heal_G + Heal)/100 ) ) %>%
     mutate( N1 = if_else( Wpn == "Moonglow", N1 + HPMax*0.01, N1) ) %>%
     mutate( N2 = if_else( Wpn == "Moonglow", N2 + HPMax*0.01, N2) ) %>%
     mutate( N3 = if_else( Wpn == "Moonglow", N3 + HPMax*0.01, N3) ) %>%
     arrange( desc(N1) )
 }
 
-wyjscieT10 <- FT10B(Staty_Kokommi)[1:50, ]
+wyjscieT10 <- FT10B(Staty_Kokomi)[1:50, ]
 
-WBT10 <- FT10B(Staty_Kokommi)
+WBT10 <- FT10B(Staty_Kokomi)
 
 FT10N <- function( zesto){ 
   zesto %>% mutate(N1 = Out_dmg*1.2308,
                    N2 = Out_dmg*1.1077,
                    N3 = Out_dmg*1.6975,
                    CH = Out_dmg*2.6698,
-                   ED = Out_dmg*1.9654) %>%
+                   ED = Out_dmg*1.9654,
+                   Bake_heal = (HPMax * 0.0792 + 932)*( 1 + (Heal_G + Heal)/100 ) ) %>%
     mutate( N1 = if_else( Wpn == "Moonglow", N1 + HPMax*0.01, N1) ) %>%
     mutate( N2 = if_else( Wpn == "Moonglow", N2 + HPMax*0.01, N2) ) %>%
     mutate( N3 = if_else( Wpn == "Moonglow", N3 + HPMax*0.01, N3) ) %>%
     arrange( desc(N1) )
 }
 
-WBN10 <- FT10N(Staty_Kokommi)
+WBN10 <- FT10N(Staty_Kokomi)
 
 FdmgoutB <- WBT10 %>% select( ATK, HPMax, Wpn, Art_type, Sub_art, N1, N2, N3, CH, ED, Reg_per_hit, ASet) %>%
   mutate( AVG_Normal = ( N1 + N2 + N3)/3)
 
-FdmgoutN <- WBN10 %>% select( ATK, HPMax, Wpn, Art_type, Sub_art, N1, N2, N3, CH, ED, ASet) %>%
+FdmgoutN <- WBN10 %>% select( ATK, HPMax, Wpn, Art_type, Sub_art, N1, N2, N3, CH, ED, Bake_heal, ASet) %>%
   mutate( AVG_Normal = ( N1 + N2 + N3)/3)
 
 #FoutB <- FdmgoutB %>% gather("Zdolnosc", "Obrazenia", 6:10 )
@@ -244,35 +246,40 @@ avgdmgB <- FdmgoutB %>% group_by( Wpn, Art_type, ASet) %>% summarise( AVG_N = me
 avgdmgN <- FdmgoutN %>% group_by( Wpn, Art_type, ASet) %>% summarise( AVG_N = mean(AVG_Normal),
                                                                    AVG_HP = mean(HPMax),
                                                                    AVG_CH = mean(CH),
-                                                                   AVG_ED = mean(ED)) %>%
+                                                                   AVG_ED = mean(ED), 
+                                                                   AVG_Bake = mean(Bake_heal) ) %>%
   arrange( desc(AVG_N) ) %>% ungroup()
 
-dane_burst <- avgdmgB %>% select(1:5, 7:8) %>% mutate( uchwyt = paste(Wpn, Art_type ))
-dane_normal <- avgdmgN %>% select(1:4, 6:7) %>% mutate( uchwyt = paste(Wpn, Art_type ))
+dane_burst <- avgdmgB %>% select(1:5, 7:8) %>% mutate( uchwyt = paste(Wpn, Art_type, ASet ))
+dane_normal <- avgdmgN %>% select(1:4, 6:8) %>% mutate( uchwyt = paste(Wpn, Art_type, ASet ))
 
 dane_razem <- left_join( dane_burst, dane_normal, "uchwyt") %>%
   mutate( AVGN = ( AVG_N.x + AVG_N.y)/2 ) %>%
   mutate( AVGC = ( AVG_CH.x + AVG_CH.y)/2 ) %>%
   mutate( AVED = ( AVG_ED.x + AVG_ED.y)/2 ) %>%
-  select(1:7, 12:17)
+  select(1:7, 12:18)
+
 colnames(dane_razem) <- c("Weapon", "Artifact_type", "Set_type","Normal_Burst",
-                          "AVG_Heal", "Charged_Burst", "Elemental_Burst",
-                          "Normal", "Charged", "Elemental", 
+                          "Burst_Heal", "Charged_Burst", "Elemental_Burst",
+                          "Normal", "Charged", "Elemental", "Bake_reg",
                           "On/Off_Burst_Normal", "On/Off_Burst_Charged", "On/Off_Burst_Elemental" )
 
-dane_razemv2 <- dane_razem %>% gather("Rodzaj_ataku", "DMG", 4:13) %>%
-  filter(!(Rodzaj_ataku == "AVG_Heal")) %>%
-  filter( !Rodzaj_ataku %in% c("Elemental","Elemental_Burst", "On/Off_Burst_Elemental")  )
+dane_razemv1 <- left_join(dane_razem, Weapon_name, by = c("Weapon" = "Wpn") )
 
-dane_razemv2_1 <- left_join(dane_razemv2, Weapon_name, by = c("Weapon" = "Wpn") )
+dane_razemv2 <- dane_razemv1 %>% gather("Rodzaj_ataku", "DMG", 4:14) %>%
+  filter( !Rodzaj_ataku %in% c("Elemental","Elemental_Burst", "On/Off_Burst_Elemental", "Burst_Heal", "Bake_reg")  )
 
-dane_razemv3 <- dane_razem %>% gather("Rodzaj_ataku", "DMG", 4:13) %>%
-  filter( Rodzaj_ataku %in% c("Elemental","Elemental_Burst", "On/Off_Burst_Elemental")  )
+dane_razemv3 <- dane_razemv1 %>% gather("Rodzaj_ataku", "DMG", 4:14) %>%
+  filter( Rodzaj_ataku %in% c("Burst_Heal", "Bake_reg")  )
 
-ggplot( data = filter(dane_razemv2, Set_type == 1) ) + 
-  geom_point( aes( Artifact_type, DMG, color = Rodzaj_ataku, shape = Rodzaj_ataku), size = 2 ) +
-  ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
-  theme(  legend.position = c( 0.65, 0.15) )+
-  guides( color = guide_legend( nrow = 2 ) ) +
-  scale_color_brewer( palette = "Dark2") +
-  coord_flip() + facet_wrap(~Weapon)
+colnames(dane_razemv3)[5] = "Leczenie"
+
+#ggplot(  ) + 
+#  geom_point( data = filter(dane_razemv2, Set_type == 0), aes( Artifact_type, DMG, color = Rodzaj_ataku, shape = Rodzaj_ataku), size = 2 ) +
+#  geom_col( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.75  ) +
+#  geom_col( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.25  ) +
+#  ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+#  theme(  legend.position = c( 0.65, 0.15) )+
+#  guides( color = guide_legend( nrow = 2 ) ) +
+#  scale_color_brewer( palette = "Dark2") +
+#  coord_flip() + facet_wrap(~WName)
