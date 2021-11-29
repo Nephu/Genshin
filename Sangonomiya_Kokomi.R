@@ -278,8 +278,10 @@ colnames(dane_razemv3)[5] = "Leczenie"
 #  geom_point( data = filter(dane_razemv2, Set_type == 0), aes( Artifact_type, DMG, color = Rodzaj_ataku, shape = Rodzaj_ataku), size = 2 ) +
 #  geom_col( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.75  ) +
 #  geom_col( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.25  ) +
+#  geom_text( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "White", size = 3, position = position_stack(vjust = 0.5)  ) +
+#  geom_text( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "brown", size = 3, position = position_stack(vjust = 0.5)  ) +
 #  ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
 #  theme(  legend.position = c( 0.65, 0.15) )+
 #  guides( color = guide_legend( nrow = 2 ) ) +
-#  scale_color_brewer( palette = "Dark2") +
+# scale_color_brewer( palette = "Dark2") +
 #  coord_flip() + facet_wrap(~WName)
