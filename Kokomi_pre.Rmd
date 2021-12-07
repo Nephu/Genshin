@@ -1,12 +1,11 @@
 ---
-title: "Sangonomiya Kokomi"
-author: "Nephu"
+title: Sangonomiya Kokomi
+#author: "Nephu"
 output:
   slidy_presentation:
-    fig_height: 7
-    fig_width: 11
-    fig_caption: true
-    highlight: zenburn
+    footer: "Nephu"
+    highlight: tango
+    logo: card/Element_Hydro.webp
 ---
 
 ```{r, include = FALSE}
@@ -14,12 +13,14 @@ source("Sangonomiya_Kokomi.R")
 library(ggplot2)
 ```
 
-### Założenia
+### Założenia {.smaller}
 Postać: poziom 90, C0, talenty 3x10
 
 Broń: poziom 90, R1, dodatkowe efekty nie wpływające na statystyki nie są uwzględnione.
 
 Artefakty: +20, 5*, początkowe staty w ATK, ATK%, HP, HP% z wyjątkiem przypadków gdyby miały pokrywać się z główną statystyką. Zostają zastąpione wtedy dowolną inną statystyką. Uśredniona wartość tierów.
+
+![](card/Character_Sangonomiya_Kokomi_Card.webp)
 
 ### Bez efektów z artefaktów
 ```{r, echo = FALSE}
