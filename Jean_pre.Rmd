@@ -18,12 +18,12 @@ Postać: poziom 90, C0, talenty 3x10
 
 Broń: poziom 90, R1, dodatkowe efekty nie wpływające na statystyki nie są uwzględnione.
 
-Artefakty: +20, 5*, początkowe staty w ATK, ATK%, Crit rate, Crit Damage z wyjątkiem przypadków gdyby miały pokrywać się z główną statystyką. Zostają zastąpione wtedy dowolną inną statystyką. Uśredniona wartość tierów.
+Artefakty: +20, 5*, początkowe staty w ATK(a), ATK%(A), Crit rate(C), Crit Damage(X) z wyjątkiem przypadków gdyby miały pokrywać się z główną statystyką. Cyfry na wykresach informują o ilości artefaktów z wymaksowanym danym substatem. Uśredniona wartość tierów.
 
 ![](card/Character_Jean_Card.webp)
 
 ### Porównanie dla uśrednionych wartości substatów {.smaller}
-```{r, echo = FALSE, fig.width=16, fig.height=9, fig.fullwidth=TRUE}
+```{r, echo = FALSE, fig.width=16, fig.height=8.5, fig.fullwidth=TRUE}
 ggplot( ) +
   geom_col( data = filter(avgStaty2, Rodzaj_ataku == "Burst"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(avgStaty2, Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
@@ -40,87 +40,115 @@ ggplot( ) +
 ```
 
 ### Set: 2 Bloodstained + 2 Pale Flame {.smaller}
-```{r, echo = FALSE, out.width=1400}
+```{r, echo = FALSE, fig.width=16, fig.height=8, fig.fullwidth=TRUE}
 ggplot( ) +
   geom_col( data = filter(staty_pod_C, ASet == 1 & Rodzaj_ataku == "Burst"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_C, ASet == 1 & Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_C, ASet == 1 & Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_C, ASet == 1 & Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
-  geom_point( data = filter(staty_pod_C, ASet == 1 & Rodzaj_ataku == c("Healing","Regen") ),
-              aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_point( data = filter(staty_pod_C, ASet == 1 & Rodzaj_ataku == "Healing"), aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_point( data = filter(staty_pod_C, ASet == 1 & Rodzaj_ataku == "Regen"), aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_text( data = filter(staty_pod_C, ASet == 1 & Rodzaj_ataku == "Charged"), aes( Art_type, 75000, label = Art_sub_x), size = 3 ) +
+  theme(  legend.position = c( 0.7, 0.13) )+
   ylab("Przeciętne obrażenia i leczenie") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   scale_fill_brewer( palette = "Set1") +
-  scale_color_brewer() +
+  scale_color_brewer( palette = "Set3") +
   guides(color = guide_legend(title = "Leczenie"))+
   ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   coord_flip() + facet_wrap(~WName)
 ```
 
 ### Set: 4 Gladiator {.smaller}
-```{r, echo = FALSE, out.width=1400}
+```{r, echo = FALSE, fig.width=16, fig.height=8, fig.fullwidth=TRUE}
 ggplot( ) +
   geom_col( data = filter(staty_pod_N, ASet == 2 & Rodzaj_ataku == "Burst"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_N, ASet == 2 & Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_N, ASet == 2 & Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_N, ASet == 2 & Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
-  geom_point( data = filter(staty_pod_N, ASet == 2 & Rodzaj_ataku == c("Healing","Regen") ),
-              aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_point( data = filter(staty_pod_N, ASet == 2 & Rodzaj_ataku == "Healing"), aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_point( data = filter(staty_pod_N, ASet == 2 & Rodzaj_ataku == "Regen"), aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_text( data = filter(staty_pod_N, ASet == 2 & Rodzaj_ataku == "Charged"), aes( Art_type, 75000, label = Art_sub_x), size = 3 ) +
+  theme(  legend.position = c( 0.7, 0.13) )+
   ylab("Przeciętne obrażenia i leczenie") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   scale_fill_brewer( palette = "Set1") +
-  scale_color_brewer() +
+  scale_color_brewer( palette = "Set3") +
   guides(color = guide_legend(title = "Leczenie"))+
   ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   coord_flip() + facet_wrap(~WName)
 ```
 
 ### Set: 2 Gladiator + 2 Shimenawa {.smaller}
-```{r, echo = FALSE, out.width=1400}
+```{r, echo = FALSE, fig.width=16, fig.height=8, fig.fullwidth=TRUE}
 ggplot( ) +
   geom_col( data = filter(staty_pod_C, ASet == 3 & Rodzaj_ataku == "Burst"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_C, ASet == 3 & Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_C, ASet == 3 & Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_C, ASet == 3 & Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
-  geom_point( data = filter(staty_pod_C, ASet == 3 & Rodzaj_ataku == c("Healing","Regen") ),
-              aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_point( data = filter(staty_pod_C, ASet == 3 & Rodzaj_ataku == "Healing"), aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_point( data = filter(staty_pod_C, ASet == 3 & Rodzaj_ataku == "Regen"), aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_text( data = filter(staty_pod_C, ASet == 3 & Rodzaj_ataku == "Charged"), aes( Art_type, 75000, label = Art_sub_x), size = 3 ) +
+  theme(  legend.position = c( 0.7, 0.13) )+
   ylab("Przeciętne obrażenia i leczenie") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   scale_fill_brewer( palette = "Set1") +
-  scale_color_brewer() +
+  scale_color_brewer( palette = "Set3") +
   guides(color = guide_legend(title = "Leczenie"))+
   ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   coord_flip() + facet_wrap(~WName)
 ```
 
 ### Set: 4 Viridescent {.smaller}
-```{r, echo = FALSE, out.width=1400}
+```{r, echo = FALSE, fig.width=16, fig.height=8, fig.fullwidth=TRUE}
 ggplot( ) +
   geom_col( data = filter(staty_pod_E, ASet == 4 & Rodzaj_ataku == "Burst"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_E, ASet == 4 & Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_E, ASet == 4 & Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_E, ASet == 4 & Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
-  geom_point( data = filter(staty_pod_E, ASet == 4 & Rodzaj_ataku == c("Healing","Regen") ),
-              aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_point( data = filter(staty_pod_E, ASet == 4 & Rodzaj_ataku == "Healing"), aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_point( data = filter(staty_pod_E, ASet == 4 & Rodzaj_ataku == "Regen"), aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_text( data = filter(staty_pod_E, ASet == 4 & Rodzaj_ataku == "Charged"), aes( Art_type, 75000, label = Art_sub_x), size = 3 ) +
+  theme(  legend.position = c( 0.7, 0.13) )+
   ylab("Przeciętne obrażenia i leczenie") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   scale_fill_brewer( palette = "Set1") +
-  scale_color_brewer() +
+  scale_color_brewer( palette = "Set3") +
   guides(color = guide_legend(title = "Leczenie"))+
   ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   coord_flip() + facet_wrap(~WName)
 ```
 
 ### Set: 4 Ocean-Hued Clam {.smaller}
-```{r, echo = FALSE, out.width=1400}
+```{r, echo = FALSE, fig.width=16, fig.height=8, fig.fullwidth=TRUE}
 ggplot( ) +
   geom_col( data = filter(staty_pod_H, ASet == 5 & Rodzaj_ataku == "Burst"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_H, ASet == 5 & Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_H, ASet == 5 & Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_H, ASet == 5 & Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
-  geom_point( data = filter(staty_pod_H, ASet == 5 & Rodzaj_ataku == c("Healing","Regen") ),
-              aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_point( data = filter(staty_pod_H, ASet == 5 & Rodzaj_ataku == "Healing"), aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_point( data = filter(staty_pod_H, ASet == 5 & Rodzaj_ataku == "Regen"), aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_text( data = filter(staty_pod_H, ASet == 5 & Rodzaj_ataku == "Charged"), aes( Art_type, 75000, label = Art_sub_x), size = 3 ) +
+  theme(  legend.position = c( 0.7, 0.13) )+
   ylab("Przeciętne obrażenia i leczenie") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   scale_fill_brewer( palette = "Set1") +
-  scale_color_brewer() +
+  scale_color_brewer( palette = "Set3") +
   guides(color = guide_legend(title = "Leczenie"))+
   ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   coord_flip() + facet_wrap(~WName)
 ```
 
+### Set: 2 Gladiator + 2 Viridescent {.smaller}
+```{r, echo = FALSE, fig.width=16, fig.height=8, fig.fullwidth=TRUE}
+ggplot( ) +
+  geom_col( data = filter(staty_pod_C, ASet == 6 & Rodzaj_ataku == "Burst"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_col( data = filter(staty_pod_C, ASet == 6 & Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_col( data = filter(staty_pod_C, ASet == 6 & Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_col( data = filter(staty_pod_C, ASet == 6 & Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_point( data = filter(staty_pod_C, ASet == 6 & Rodzaj_ataku == "Healing"), aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_point( data = filter(staty_pod_C, ASet == 6 & Rodzaj_ataku == "Regen"), aes( Art_type, DMG, color = Rodzaj_ataku) ) +
+  geom_text( data = filter(staty_pod_C, ASet == 6 & Rodzaj_ataku == "Charged"), aes( Art_type, 75000, label = Art_sub_x), size = 3 ) +
+  theme(  legend.position = c( 0.7, 0.13) )+
+  ylab("Przeciętne obrażenia i leczenie") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+  scale_fill_brewer( palette = "Set1") +
+  scale_color_brewer( palette = "Set3") +
+  guides(color = guide_legend(title = "Leczenie"))+
+  ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+  coord_flip() + facet_wrap(~WName)
+```

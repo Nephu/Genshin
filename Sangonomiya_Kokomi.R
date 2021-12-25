@@ -164,13 +164,16 @@ Sett <- Sett %>% mutate( uchwyt = c("A_r") )
 
 Set_name <- tribble(~ASet, ~Name_Set,
                     0, "Bez_setu",
-                    1, "4xHeart_of_Depth")
+                    1, "4xHeart_of_Depth",
+                    2, "4xOcean-Hued Clam",
+                    3, "4xTenacity of the Millelith")
 
 ArtSet <- tribble(~Atk_AS, ~HP_AS, ~HDRAS, ~HealAS,
                   ~N_AS, ~CH_AS, ~E_AS, ~Q_AS, ~ASetAS, ~uchwyt,
                   0, 0, 0, 0, 0, 0, 0, 0, 0, "A_r",
                   0, 0, 15, 0, 30, 30, 0, 0, 1, "A_r",
-                  0, 0, 0, 15, 0, 0, 0, 0, 2, "A_r")
+                  0, 0, 0, 15, 0, 0, 0, 0, 2, "A_r",
+                  20, 20, 0, 0, 0, 0, 0, 0, 3, "A_r")
 
 Sett2 <- left_join( Sett, ArtSet, "uchwyt") %>%
   mutate( Atk_proc = Atk_proc + Atk_AS, HP_proc = HP_proc + HP_AS,
@@ -197,15 +200,15 @@ Staty_Kokomi <- left_join( Sett2, Artifact, "uchwyt") %>%
 
 
 FT10B <- function( zesto){ 
-  zesto %>% mutate(N1 = Out_dmg*1.2308 + N_HP_bonus,
-                   N2 = Out_dmg*1.1077 + N_HP_bonus,
-                   N3 = Out_dmg*1.6975 + N_HP_bonus,
-                   CH = Out_dmg*2.6698 + CH_HP_bonus,
-                   ED = Out_dmg*1.9654 + ED_HP_bonus,
+  zesto %>% mutate(N1 = Out_dmg*1.2308 + N_HP_bonus* ( 1 + HDR/100 ),
+                   N2 = Out_dmg*1.1077 + N_HP_bonus* ( 1 + HDR/100 ),
+                   N3 = Out_dmg*1.6975 + N_HP_bonus* ( 1 + HDR/100 ),
+                   CH = Out_dmg*2.6698 + CH_HP_bonus* ( 1 + HDR/100 ),
+                   ED = Out_dmg*1.9654 + ED_HP_bonus* ( 1 + HDR/100 ),
                    Reg_per_hit = (HPMax * 0.0145 + 169)*( 1 + (Heal_G + Heal)/100 ) ) %>%
-    mutate( N1 = if_else( Wpn == "Moonglow", N1 + HPMax*0.01, N1) ) %>%
-    mutate( N2 = if_else( Wpn == "Moonglow", N2 + HPMax*0.01, N2) ) %>%
-    mutate( N3 = if_else( Wpn == "Moonglow", N3 + HPMax*0.01, N3) ) %>%
+    mutate( N1 = if_else( Wpn == "Moonglow", N1 + HPMax*0.01*( 1 + HDR/100 ), N1) ) %>%
+    mutate( N2 = if_else( Wpn == "Moonglow", N2 + HPMax*0.01*( 1 + HDR/100 ), N2) ) %>%
+    mutate( N3 = if_else( Wpn == "Moonglow", N3 + HPMax*0.01*( 1 + HDR/100 ), N3) ) %>%
     arrange( desc(N1) )
 }
 
@@ -220,9 +223,9 @@ FT10N <- function( zesto){
                    CH = Out_dmg*2.6698,
                    ED = Out_dmg*1.9654,
                    Bake_heal = (HPMax * 0.0792 + 932)*( 1 + (Heal_G + Heal)/100 ) ) %>%
-    mutate( N1 = if_else( Wpn == "Moonglow", N1 + HPMax*0.01, N1) ) %>%
-    mutate( N2 = if_else( Wpn == "Moonglow", N2 + HPMax*0.01, N2) ) %>%
-    mutate( N3 = if_else( Wpn == "Moonglow", N3 + HPMax*0.01, N3) ) %>%
+    mutate( N1 = if_else( Wpn == "Moonglow", N1 + HPMax*0.01*( 1 + HDR/100 ), N1) ) %>%
+    mutate( N2 = if_else( Wpn == "Moonglow", N2 + HPMax*0.01*( 1 + HDR/100 ), N2) ) %>%
+    mutate( N3 = if_else( Wpn == "Moonglow", N3 + HPMax*0.01*( 1 + HDR/100 ), N3) ) %>%
     arrange( desc(N1) )
 }
 
@@ -274,14 +277,14 @@ dane_razemv3 <- dane_razemv1 %>% gather("Rodzaj_ataku", "DMG", 4:14) %>%
 
 colnames(dane_razemv3)[5] = "Leczenie"
 
-#ggplot(  ) + 
-#  geom_point( data = filter(dane_razemv2, Set_type == 0), aes( Artifact_type, DMG, color = Rodzaj_ataku, shape = Rodzaj_ataku), size = 2 ) +
-#  geom_col( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.75  ) +
-#  geom_col( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.25  ) +
-#  geom_text( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "White", size = 3, position = position_stack(vjust = 0.5)  ) +
-#  geom_text( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "brown", size = 3, position = position_stack(vjust = 0.5)  ) +
-#  ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
-#  theme(  legend.position = c( 0.65, 0.15) )+
-#  guides( color = guide_legend( nrow = 2 ) ) +
-# scale_color_brewer( palette = "Dark2") +
-#  coord_flip() + facet_wrap(~WName)
+plot <- ggplot(  ) + 
+  geom_point( data = filter(dane_razemv2, Set_type == 0), aes( Artifact_type, DMG, color = Rodzaj_ataku, shape = Rodzaj_ataku), size = 2 ) +
+  geom_col( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.75  ) +
+  geom_col( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.25  ) +
+  geom_text( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "White", size = 3, position = position_stack(vjust = 0.5)  ) +
+  geom_text( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "brown", size = 3, position = position_stack(vjust = 0.5)  ) +
+  ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+  theme(  legend.position = c( 0.65, 0.15) )+
+  guides( color = guide_legend( nrow = 2 ) ) +
+ scale_color_brewer( palette = "Dark2") +
+  coord_flip() + facet_wrap(~WName)

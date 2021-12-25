@@ -1,9 +1,8 @@
 ---
-title: Sangonomiya Kokomi
-#author: "Nephu"
+title: "Sangonomiya Kokomi"
 output:
   slidy_presentation:
-    footer: "Nephu"
+    footer: Nephu
     highlight: tango
     logo: card/Element_Hydro.webp
 ---
@@ -22,46 +21,46 @@ Artefakty: +20, 5*, początkowe staty w ATK, ATK%, HP, HP% z wyjątkiem przypadk
 
 ![](card/Character_Sangonomiya_Kokomi_Card.webp)
 
-### Bez efektów z artefaktów
-```{r, echo = FALSE}
-ggplot(  ) + 
-  geom_point( data = filter(dane_razemv2, Set_type == 0), aes( Artifact_type, DMG, color = Rodzaj_ataku, shape = Rodzaj_ataku), size = 2 ) +
-  geom_col( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.95  ) +
-  geom_col( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.25  ) +
-  geom_text( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "yellow", size = 2, position = position_stack(vjust = 0.5)  ) +
-  geom_text( data = filter(dane_razemv3, Set_type == 0 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "brown", size = 2, position = position_stack(vjust = 0.5)  ) +
-  ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
-  theme(  legend.position = c( 0.65, 0.15) )+
-  guides( color = guide_legend( nrow = 2 ) ) +
-  scale_color_brewer( palette = "Dark2") +
-  coord_flip() + facet_wrap(~WName)
-```
-
-### 4 x Heart of Depth
-```{r, echo = FALSE}
+### 4 x Heart of Depth {.smaller}
+```{r, echo = FALSE, fig.width=16, fig.height=9, fig.fullwidth=TRUE}
 ggplot(  ) + 
   geom_point( data = filter(dane_razemv2, Set_type == 1), aes( Artifact_type, DMG, color = Rodzaj_ataku, shape = Rodzaj_ataku), size = 2 ) +
   geom_col( data = filter(dane_razemv3, Set_type == 1 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.95  ) +
   geom_col( data = filter(dane_razemv3, Set_type == 1 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.25  ) +
-  geom_text( data = filter(dane_razemv3, Set_type == 1 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "yellow", size = 2, position = position_stack(vjust = 0.5)  ) +
-  geom_text( data = filter(dane_razemv3, Set_type == 1 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "brown", size = 2, position = position_stack(vjust = 0.5)  ) +
+  geom_text( data = filter(dane_razemv3, Set_type == 1 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "black", size = 2.5, position = position_stack(vjust = 0.5)  ) +
+  geom_text( data = filter(dane_razemv3, Set_type == 1 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "brown", size = 2.5, position = position_stack(vjust = 0.5)  ) +
   ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
-  theme(  legend.position = c( 0.65, 0.15) )+
+  theme(  legend.position = c( 0.7, 0.13) )+
   guides( color = guide_legend( nrow = 2 ) ) +
   scale_color_brewer( palette = "Dark2") +
   coord_flip() + facet_wrap(~WName)
 ```
 
-### 4 x Ocean-Hued Clam
-```{r, echo = FALSE}
+### 4 x Ocean-Hued Clam {.smaller}
+```{r, echo = FALSE, fig.width=16, fig.height=9, fig.fullwidth=TRUE}
 ggplot(  ) + 
   geom_point( data = filter(dane_razemv2, Set_type == 2), aes( Artifact_type, DMG, color = Rodzaj_ataku, shape = Rodzaj_ataku), size = 2 ) +
   geom_col( data = filter(dane_razemv3, Set_type == 2 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.95  ) +
   geom_col( data = filter(dane_razemv3, Set_type == 2 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.25  ) +
-  geom_text( data = filter(dane_razemv3, Set_type == 2 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "yellow", size = 2, position = position_stack(vjust = 0.5)  ) +
-  geom_text( data = filter(dane_razemv3, Set_type == 2 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "brown", size = 2, position = position_stack(vjust = 0.5)  ) +
+  geom_text( data = filter(dane_razemv3, Set_type == 2 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "black", size = 2.5, position = position_stack(vjust = 0.5)  ) +
+  geom_text( data = filter(dane_razemv3, Set_type == 2 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "brown", size = 2.5, position = position_stack(vjust = 0.5)  ) +
   ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
-  theme(  legend.position = c( 0.65, 0.15) )+
+  theme(  legend.position = c( 0.7, 0.13) )+
+  guides( color = guide_legend( nrow = 2 ) ) +
+  scale_color_brewer( palette = "Dark2") +
+  coord_flip() + facet_wrap(~WName)
+```
+
+### 4 x Tenacity of the Millelith {.smaller}
+```{r, echo = FALSE, fig.width=16, fig.height=9, fig.fullwidth=TRUE}
+ggplot(  ) + 
+  geom_point( data = filter(dane_razemv2, Set_type == 3), aes( Artifact_type, DMG, color = Rodzaj_ataku, shape = Rodzaj_ataku), size = 2 ) +
+  geom_col( data = filter(dane_razemv3, Set_type == 3 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.95  ) +
+  geom_col( data = filter(dane_razemv3, Set_type == 3 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, fill = Leczenie ), alpha = 0.25  ) +
+  geom_text( data = filter(dane_razemv3, Set_type == 3 & Leczenie == "Burst_Heal"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "black", size = 2.5, position = position_stack(vjust = 0.5)  ) +
+  geom_text( data = filter(dane_razemv3, Set_type == 3 & Leczenie == "Bake_reg"), aes( Artifact_type, DMG, label = round(DMG,0) ), color = "brown", size = 2.5, position = position_stack(vjust = 0.5)  ) +
+  ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+  theme(  legend.position = c( 0.7, 0.13) )+
   guides( color = guide_legend( nrow = 2 ) ) +
   scale_color_brewer( palette = "Dark2") +
   coord_flip() + facet_wrap(~WName)
