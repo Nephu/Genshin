@@ -45,11 +45,12 @@ ggplot( ) +
   geom_col( data = filter(staty_pod_C, ASet == 1 & Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_C, ASet == 1 & Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_C, ASet == 1 & Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
-  geom_text( data = filter(staty_pod_C, ASet == 1 & Rodzaj_ataku == "Charged"), aes( Art_type, 100000, label = Art_sub_x), size = 3 ) +
+  geom_text( data = filter(staty_pod_C, ASet == 1 & Rodzaj_ataku == "Charged"), aes( Art_type, 140000, label = Art_sub_x), size = 3 ) +
   theme(  legend.position = c( 0.7, 0.13) )+
   ylab("Przeciętne obrażenia i leczenie") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   scale_fill_brewer( palette = "Purples", direction = -1) +
   ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+  ylim(0, 150000) +
   coord_flip() + facet_wrap(~WName)
 ```
 
@@ -60,11 +61,12 @@ ggplot( ) +
   geom_col( data = filter(staty_pod_N, ASet == 2 & Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_N, ASet == 2 & Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_N, ASet == 2 & Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
-  geom_text( data = filter(staty_pod_N, ASet == 2 & Rodzaj_ataku == "Normal"), aes( Art_type, 100000, label = Art_sub_x), size = 3 ) +
+  geom_text( data = filter(staty_pod_N, ASet == 2 & Rodzaj_ataku == "Normal"), aes( Art_type, 140000, label = Art_sub_x), size = 3 ) +
   theme(  legend.position = c( 0.7, 0.13) )+
   ylab("Przeciętne obrażenia i leczenie") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   scale_fill_brewer( palette = "Purples", direction = -1) +
   ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+  ylim(0, 150000) +
   coord_flip() + facet_wrap(~WName)
 ```
 
@@ -75,11 +77,12 @@ ggplot( ) +
   geom_col( data = filter(staty_pod_C, ASet == 3 & Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_C, ASet == 3 & Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_C, ASet == 3 & Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
-  geom_text( data = filter(staty_pod_C, ASet == 3 & Rodzaj_ataku == "Charged"), aes( Art_type, 100000, label = Art_sub_x), size = 3 ) +
+  geom_text( data = filter(staty_pod_C, ASet == 3 & Rodzaj_ataku == "Charged"), aes( Art_type, 140000, label = Art_sub_x), size = 3 ) +
   theme(  legend.position = c( 0.7, 0.13) )+
   ylab("Przeciętne obrażenia i leczenie") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   scale_fill_brewer( palette = "Purples", direction = -1) +
   ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+  ylim(0, 150000) +
   coord_flip() + facet_wrap(~WName)
 ```
 
@@ -90,11 +93,12 @@ ggplot( ) +
   geom_col( data = filter(staty_pod_Q, ASet == 4 & Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_Q, ASet == 4 & Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_Q, ASet == 4 & Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
-  geom_text( data = filter(staty_pod_Q, ASet == 4 & Rodzaj_ataku == "Burst"), aes( Art_type, 100000, label = Art_sub_x), size = 3 ) +
+  geom_text( data = filter(staty_pod_Q, ASet == 4 & Rodzaj_ataku == "Burst"), aes( Art_type, 140000, label = Art_sub_x), size = 3 ) +
   theme(  legend.position = c( 0.7, 0.13) )+
   ylab("Przeciętne obrażenia i leczenie") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   scale_fill_brewer( palette = "Purples", direction = -1) +
   ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+  ylim(0, 150000) +
   coord_flip() + facet_wrap(~WName)
 ```
 
@@ -105,11 +109,12 @@ ggplot( ) +
   geom_col( data = filter(staty_pod_Q, ASet == 5 & Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_Q, ASet == 5 & Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_Q, ASet == 5 & Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
-  geom_text( data = filter(staty_pod_Q, ASet == 5 & Rodzaj_ataku == "Burst"), aes( Art_type, 100000, label = Art_sub_x), size = 3 ) +
+  geom_text( data = filter(staty_pod_Q, ASet == 5 & Rodzaj_ataku == "Burst"), aes( Art_type, 140000, label = Art_sub_x), size = 3 ) +
   theme(  legend.position = c( 0.7, 0.13) )+
   ylab("Przeciętne obrażenia i leczenie") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   scale_fill_brewer( palette = "Purples", direction = -1) +
   ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+  ylim(0, 150000) +
   coord_flip() + facet_wrap(~WName)
 ```
 
@@ -120,11 +125,12 @@ ggplot( ) +
   geom_col( data = filter(staty_pod_Q, ASet == 6 & Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_Q, ASet == 6 & Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
   geom_col( data = filter(staty_pod_Q, ASet == 6 & Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
-  geom_text( data = filter(staty_pod_Q, ASet == 6 & Rodzaj_ataku == "Burst"), aes( Art_type, 100000, label = Art_sub_x), size = 3 ) +
+  geom_text( data = filter(staty_pod_Q, ASet == 6 & Rodzaj_ataku == "Burst"), aes( Art_type, 140000, label = Art_sub_x), size = 3 ) +
   theme(  legend.position = c( 0.7, 0.13) )+
   ylab("Przeciętne obrażenia i leczenie") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
   scale_fill_brewer( palette = "Purples", direction = -1) +
   ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+  ylim(0, 150000) +
   coord_flip() + facet_wrap(~WName)
 ```
 
