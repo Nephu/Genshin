@@ -1,0 +1,134 @@
+---
+title: "Yae Miko"
+output:
+  slidy_presentation:
+    footer: Nephu
+    highlight: tango
+    toc: true
+    df_print: paged
+---
+
+```{r, include = FALSE}
+source("Yae_Miko.R")
+library(ggplot2)
+```
+
+### Założenia {.smaller}
+Postać: poziom 90, C0, talenty 3x10
+
+Broń: poziom 90, R1, dodatkowe efekty nie wpływające na statystyki nie są uwzględnione.
+
+Widsith - zamiast wyliczania oddzielnie obrażeń dla każdego wzmocnienie przyjąłem, że występują na raz wszystkie trzy ale w wysokości 1/3 właściwej wartości
+
+Artefakty: +20, 5*, substaty w ATK(a), ATK%(A), Crit rate(C), Crit Damage(X), Elemental Mastery(E) z wyjątkiem przypadków gdyby miały pokrywać się z główną statystyką. Cyfry na wykresach informują o ilości artefaktów z wymaksowanym danym substatem. Uśredniona wartość tierów.
+
+Normal - liczony jako średnia z uderzeń.
+
+Elemental - suma 3 uderzeń z 3 poziomowych totemów
+
+Burst -  suma wszystkich zadawanych przez niego obrażeń
+
+![](card/Character_Yae_Miko_Card.webp)
+
+### Porównanie dla uśrednionych wartości substatów {.smaller}
+```{r, echo = FALSE, fig.width=16, fig.height=8.5, fig.fullwidth=TRUE}
+ggplot( ) +
+  geom_col( data = filter(avgStaty2, Rodzaj_ataku == "Burst"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_col( data = filter(avgStaty2, Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_col( data = filter(avgStaty2, Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_col( data = filter(avgStaty2, Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  ylab("Przeciętne obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+  scale_fill_viridis_d( option = "C") +
+  scale_y_continuous( breaks = c(75000, 150000, 225000, 300000),
+                      labels = c("75K", "150K", "225K", "300K") ) + 
+  theme_bw() +
+  coord_flip() + facet_grid(Name_Set~WName)
+```
+
+### Set: 4 Thundersoother {.smaller}
+```{r, echo = FALSE, fig.width=16, fig.height=8.5, fig.fullwidth=TRUE}
+ggplot( ) +
+  geom_col( data = filter(staty_pod_Q, ASet == 1 & Rodzaj_ataku == "Burst"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_col( data = filter(staty_pod_Q, ASet == 1 & Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_col( data = filter(staty_pod_Q, ASet == 1 & Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_col( data = filter(staty_pod_Q, ASet == 1 & Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_text( data = filter(staty_pod_Q, ASet == 1 & Rodzaj_ataku == "Burst"), aes( Art_type, 315000, label = Art_sub_x), size = 3 ) +
+  #theme(  legend.position = c( 0.7, 0.13) )+
+  scale_fill_brewer( palette = "Purples", direction = -1) +
+  scale_y_continuous( breaks = c(50000, 100000, 150000, 200000, 250000, 300000),
+                      labels = c("50K", "100K", "150K", "200K", "250K", "300K"),
+                      limits = c( 0, 325000) ) + 
+  ylab("Obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+  coord_flip() + facet_wrap(~WName)
+```
+
+### Set: 2 Th. Fury + 2 Gladiator {.smaller}
+```{r, echo = FALSE, fig.width=16, fig.height=8.5, fig.fullwidth=TRUE}
+ggplot( ) +
+  geom_col( data = filter(staty_pod_Q, ASet == 2 & Rodzaj_ataku == "Burst"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_col( data = filter(staty_pod_Q, ASet == 2 & Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_col( data = filter(staty_pod_Q, ASet == 2 & Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_col( data = filter(staty_pod_Q, ASet == 2 & Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_text( data = filter(staty_pod_Q, ASet == 2 & Rodzaj_ataku == "Burst"), aes( Art_type, 315000, label = Art_sub_x), size = 3 ) +
+  #theme(  legend.position = c( 0.7, 0.13) )+
+  scale_fill_brewer( palette = "Purples", direction = -1) +
+  ylab("Obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+  scale_y_continuous( breaks = c(50000, 100000, 150000, 200000, 250000, 300000),
+                      labels = c("50K", "100K", "150K", "200K", "250K", "300K"),
+                      limits = c( 0, 325000)  ) + 
+  coord_flip() + facet_wrap(~WName)
+```
+
+### Set: 2 Th. Fury + 2 Wanderer {.smaller}
+```{r, echo = FALSE, fig.width=16, fig.height=8.5, fig.fullwidth=TRUE}
+ggplot( ) +
+  geom_col( data = filter(staty_pod_Q, ASet == 3 & Rodzaj_ataku == "Burst"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_col( data = filter(staty_pod_Q, ASet == 3 & Rodzaj_ataku == "Elemental"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_col( data = filter(staty_pod_Q, ASet == 3 & Rodzaj_ataku == "Charged"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_col( data = filter(staty_pod_Q, ASet == 3 & Rodzaj_ataku == "Normal"), aes( Art_type, DMG, fill = Rodzaj_ataku) ) +
+  geom_text( data = filter(staty_pod_Q, ASet == 3 & Rodzaj_ataku == "Burst"), aes( Art_type, 315000, label = Art_sub_x), size = 3 ) +
+  #theme(  legend.position = c( 0.7, 0.13) )+
+  scale_fill_brewer( palette = "Purples", direction = -1) +
+  ylab("Obrażenia") + xlab("Kombinacje artefaktów: Sands, Goblet, Circlet") +
+  scale_y_continuous( breaks = c(50000, 100000, 150000, 200000, 250000, 300000),
+                      labels = c("50K", "100K", "150K", "200K", "250K", "300K"),
+                      limits = c( 0, 325000)  ) + 
+  coord_flip() + facet_wrap(~WName)
+```
+
+
+### Najwyższe wartości obrażeń dla kombinacji broni i setu, sortowane wg ich źródła {.smaller}
+
+Normal
+
+```{r, echo = FALSE, cols.print=6, rows.print=10}
+topmaxN
+
+```
+
+
+Elemental
+
+```{r, echo = FALSE, cols.print=6, rows.print=10}
+
+topmaxE
+
+
+```
+
+Burst
+
+```{r, echo = FALSE, cols.print=6, rows.print=10}
+
+topmaxQ
+
+```
+
+
+Stosunek obrażeń kombinacji względem najwyższej wartości dla podanego żródła na podstawie tabeli Burst
+
+```{r, echo = FALSE, cols.print=6, rows.print=10}
+
+opttopQ
+
+```
