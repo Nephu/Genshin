@@ -1,6 +1,7 @@
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
+library(stringr)
 
 Flower <- tribble(~HP_flat_F, ~uchwyt, 4780, "A_r")
 
@@ -129,7 +130,11 @@ Artifact <- Artifact_X %>%
   mutate( Art_type = paste(S_typ, G_typ, C_typ, sep = " ") ) %>%
   distinct( Art_sub_x, Art_type, ileap, ileaf, ilecr, ilecd, ileemr, .keep_all = TRUE  ) %>%
   select( -S_typ, -G_typ, -C_typ) %>%
-  mutate( ileap = ileap * 4.955,
+  mutate( iledp = ileap * 6.195,
+          iledf = ileaf * 19.675,
+          ilehp = ileap * 4.955,
+          ilehf = ileaf * 253.94,
+          ileap = ileap * 4.955,
           ileaf = ileaf * 16.535,
           ilecr = ilecr * 3.305,
           ilecd = ilecd * 6.605,
@@ -137,19 +142,33 @@ Artifact <- Artifact_X %>%
           ileer = ileemr * 5.505
           ) %>%
   mutate( Art_AP = Atk_proc_S + Atk_proc_G + Atk_proc_C + ileap) %>%
-  select( -Atk_proc_S, -Atk_proc_G, -Atk_proc_C, -ileap) %>%
-  mutate( Art_AF = Atk_flat_P + ileaf) %>%
-  select( -Atk_flat_P, -ileaf) %>%
+  mutate( Art_HP = Atk_proc_S + Atk_proc_G + Atk_proc_C + ilehp) %>%
+  mutate( Art_DP = (Atk_proc_S + Atk_proc_G + Atk_proc_C)*58.3/46.6 + iledp) %>%
+  select( -Atk_proc_S, -Atk_proc_G, -Atk_proc_C, -ileap, -ilehp, -iledp) %>%
+  mutate( Art_AF = Atk_flat_P + ileaf, Art_HF = HP_flat_F + ilehf, Art_DF = iledf) %>%
+  select( -Atk_flat_P, -ileaf, -ilehf, -iledf) %>%
   mutate( Art_CR = CR_C + ilecr, Art_CD = CD_C + ilecd) %>%
   select( -CR_C, -ilecr, -CD_C, -ilecd) %>%
   mutate( Art_EM = (E_C + E_G + E_S)*186.5 + ileem,
           Art_ER = E_S *  51.8 + ileer ) %>%
   select( -E_S, -ileemr, -ileem, -ileer ) %>%
   mutate( Art_sub_x = trimws(ile_subart(Art_sub_x)) ) %>%
-  distinct(Art_type, Art_sub_x, Art_AP, Art_AF, Art_CR, Art_CD, Art_EM, Art_ER, .keep_all = TRUE)
+  distinct(Art_type, Art_sub_x, Art_AP, Art_AF, Art_CR, Art_CD, Art_EM, Art_ER,
+           Art_HP, Art_HF, Art_DP, Art_DF, .keep_all = TRUE)
 
-Artifact_EM <- Artifact %>% filter( !( Waga_S == 0 & Waga_G == 1) & !( Waga_S == 0 & Waga_C == 1) ) %>%
-  select(-E_G, -E_C, -Art_ER, -Waga_S, -Waga_G, -Waga_C)
+Artifact_EM <- Artifact %>% filter( !( Waga_S == 0 & Waga_G == 1) & !( Waga_S == 0 & Waga_C == 1) & !( Waga_G == 0 & Waga_C == 1)) %>%
+  select(-E_G, -E_C, -Art_ER, -Waga_S, -Waga_G, -Waga_C, -Art_DF, -Art_DP, -Art_HF, -Art_HP)
 
 Artifact_ER <- Artifact %>% filter( E_G == 0 & E_C == 0 ) %>% 
-  select( -E_G, -E_C, -Art_EM, -Waga_S, -Waga_G, -Waga_C)
+  select( -E_G, -E_C, -Art_EM, -Waga_S, -Waga_G, -Waga_C, -Art_DF, -Art_DP, -Art_HF, -Art_HP)
+
+Artifact_HDER <- Artifact %>% filter( E_G == 0 & E_C == 0 ) %>% 
+  select( -E_G, -E_C, -Art_EM, -Waga_S, -Waga_G, -Waga_C) %>%
+  mutate( Art_AP = 0, Art_AF = 311,
+          Art_sub_x = str_replace_all(Art_sub_x, "a", "f"),
+          Art_sub_x = str_replace_all(Art_sub_x, "A", "P") )
+
+Artifact_HER <- Artifact_HDER %>% select( -Art_DF, -Art_DP)
+Artifact_DER <- Artifact_HDER %>% select( -Art_HF, -Art_HP)
+
+rm(Artifact, Artifact_X, Art_GSFP, Art_SFP, Art_FP, Artifact_HDER)
